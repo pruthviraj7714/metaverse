@@ -7,7 +7,7 @@ import { JWT_SECRET } from "../config/config";
 
 export const userRouter = Router();
 
-userRouter.post("/signup", async (req: Request, res: Response) => {
+userRouter.post("/signup", async (req: any, res: any) => {
   const parsedBody = SignUpSchema.safeParse(req.body);
 
   if (!parsedBody.success) {
@@ -51,7 +51,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.post("/signin", async (req: Request, res: Response) => {
+userRouter.post("/signin", async (req: any, res: any) => {
   const parsedBody = SignInSchema.safeParse(req.body);
 
   if (!parsedBody.success) {

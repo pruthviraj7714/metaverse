@@ -8,7 +8,7 @@ declare module "express-serve-static-core" {
     }
 }
 
-export default function authMiddleware(req : Request, res : Response, next : NextFunction) {
+export default function authMiddleware(req : any, res : any, next : any) {
     const header = req.headers["authorization"];
     const token = header?.split(" ")[1];
 
