@@ -10,7 +10,7 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
-  role    Role    @default(User)
+  role      Role     @default(User)
   password  String
   spaces    Space[]
   avatar    Avatar?
@@ -27,31 +27,29 @@ model Avatar {
 }
 
 model Space {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   creatorId Int
-  creator   User      @relation(fields: [creatorId], references: [id])
-  size      String
+  creator   User     @relation(fields: [creatorId], references: [id])
   thumbnail String
-  elements  Element[]
-  map       Map?
-  createdAt DateTime  @default(now())
+  mapId     String
+  map       Map      @relation(fields: [mapId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model Map {
-  id      String @id @default(uuid())
-  name    String
-  spaceId String
-  space   Space  @relation(fields: [spaceId], references: [id])
+  id         String    @id @default(uuid())
+  name       String
   dimensions Json
-
-  @@unique([spaceId])
+  elements   Element[]
+  spaces     Space[]
 }
 
 model Element {
-  id         String @id @default(uuid())
-  spaceId    String
-  space      Space  @relation(fields: [spaceId], references: [id])
+  id         String  @id @default(uuid())
+  mapId      String?
+  map        Map?    @relation(fields: [mapId], references: [id])
   name       String
+  imageUrl   String
   dimensions Json
   position   Json
 }
