@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  role    Role    @default(User)
+  password  String
+  spaces    Space[]
+  avatar    Avatar?
+  createdAt DateTime @default(now())
+}
+
+model Avatar {
+  id       String @id @default(uuid())
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  imageUrl String
+
+  @@unique([userId])
+}
+
+model Space {
+  id        String    @id @default(uuid())
+  creatorId Int
+  creator   User      @relation(fields: [creatorId], references: [id])
+  size      String
+  thumbnail String
+  elements  Element[]
+  map       Map?
+  createdAt DateTime  @default(now())
+}
+
+model Map {
+  id      String @id @default(uuid())
+  name    String
+  spaceId String
+  space   Space  @relation(fields: [spaceId], references: [id])
+  dimensions Json
+
+  @@unique([spaceId])
+}
+
+model Element {
+  id         String @id @default(uuid())
+  spaceId    String
+  space      Space  @relation(fields: [spaceId], references: [id])
+  name       String
+  dimensions Json
+  position   Json
+}
+
+enum Role {
+  Admin
+  User
+}
