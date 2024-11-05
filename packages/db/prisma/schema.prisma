@@ -15,12 +15,13 @@ model User {
   spaces    Space[]
   avatar    Avatar?
   createdAt DateTime @default(now())
+
 }
 
 model Avatar {
   id       String @id @default(uuid())
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  userId   Int?
+  user     User?   @relation(fields: [userId], references: [id])
   imageUrl String
 
   @@unique([userId])
@@ -37,11 +38,15 @@ model Space {
 }
 
 model Map {
-  id         String    @id @default(uuid())
-  name       String
-  dimensions Json
-  elements   Element[]
-  spaces     Space[]
+  id                String    @id @default(uuid())
+  name              String
+  description       String
+  dimensions        Json
+  backgroundBaseUrl String
+  elements          Element[]
+  spaces            Space[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Element {
