@@ -1,9 +1,10 @@
 import { Router } from "express";
 import client from "@repo/db/src/db";
+import authMiddleware from "../middleware/middleware";
 
 export const spaceRouter = Router();
 
-spaceRouter.get("/:spaceId", async (req: any, res: any) => {
+spaceRouter.get("/:spaceId", authMiddleware, async (req: any, res: any) => {
   const spaceId = req.query.spaceId as string;
 
   if (!spaceId) {
@@ -33,7 +34,27 @@ spaceRouter.get("/:spaceId", async (req: any, res: any) => {
   }
 });
 
-spaceRouter.delete("/:spaceId", async (req: any, res: any) => {
+spaceRouter.post("/all", authMiddleware, async (req: any, res: any) => {
+  const userId = req.userId;
+
+  try {
+    const spaces = await client.space.findMany({
+      where: {
+        creatorId: userId,
+      },
+    });
+
+    return res.json({
+      spaces,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
+
+spaceRouter.delete("/:spaceId", authMiddleware, async (req: any, res: any) => {
   const spaceId = req.query.spaceId as string;
 
   if (!spaceId) {

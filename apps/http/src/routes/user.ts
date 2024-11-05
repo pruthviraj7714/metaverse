@@ -4,6 +4,7 @@ import client from "@repo/db/src/db";
 import { SignInSchema, SignUpSchema } from "../types";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/config";
+import authMiddleware from "../middleware/middleware";
 
 export const userRouter = Router();
 
@@ -29,13 +30,16 @@ userRouter.post("/signup", async (req: any, res: any) => {
         message: "Username already exists",
       });
     }
-
+   
+    const isAdmin = username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD
+      
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await client.user.create({
       data: {
         username,
         password: hashedPassword,
+        role : isAdmin ? "Admin" : "User"
       },
     });
 
@@ -83,7 +87,7 @@ userRouter.post("/signin", async (req: any, res: any) => {
     }
 
     const token = jwt.sign(
-      { id: user.id },
+      { id: user.id, role : user.role },
       JWT_SECRET as string,
       { expiresIn: "1h" }
     );
@@ -100,3 +104,36 @@ userRouter.post("/signin", async (req: any, res: any) => {
     });
   }
 });
+
+
+userRouter.put('/metadata', authMiddleware, async(req : any, res : any) => { 
+  const { avatarId } = req.body;
+
+  if(!avatarId) {
+    return res.status(400).json({
+      message : "Avatar Id is not found!"
+    })
+  }
+  
+  try {
+      await client.user.update({
+        where : {
+          id : req.userId
+        },
+        data : {
+          avatar : avatarId,
+        }
+      })
+
+      return res.status(200).json({
+        message : "Avatar metadata updated successfully!"
+      })
+
+  } catch (error) {
+    return res.status(500).json({
+      message : "Internal Server Error"
+    })
+  }
+
+
+})

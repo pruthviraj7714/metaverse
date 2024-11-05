@@ -24,5 +24,18 @@ export const CreateElementSchema = z.object({
     }),
     imageUrl : z.string(),
     mapId : z.string(),
-
 })
+
+export const CreateMapSchema = z.object({
+    name : z.string(),
+    description : z.string(),
+    dimensions : z.object({
+        height : z.number(),
+        width : z.number()
+    }),
+    backgroundBaseUrl : z.string(),
+});
+
+export const CreateAvatarSchema = z.object({
+    imageUrl : z.string(),
+});
