@@ -1,13 +1,26 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from "ws";
+import { User } from "./UserManager";
 
 const wss = new WebSocketServer({ port: 8080 });
 
-wss.on('connection', function connection(ws) {
-  ws.on('error', console.error);
+wss.on("connection", (ws: WebSocket) => {
+  console.log("New client connected");
 
-  ws.on('message', function message(data) {
-    console.log('received: %s', data);
+  const user = new User(ws);
+
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
   });
 
-  ws.send('Hi there');
+  ws.on("close", () => {
+    console.log("Client disconnected");
+    user.destroy();
+  });
+
+  ws.send(
+    JSON.stringify({
+      type: "welcome",
+      message: "Hi there! Welcome to the server.",
+    })
+  );
 });
