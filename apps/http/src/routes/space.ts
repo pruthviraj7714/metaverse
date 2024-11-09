@@ -1,5 +1,5 @@
 import { Router } from "express";
-import client from "@repo/db/src/db";
+import client from "@repo/db/client";
 import authMiddleware from "../middleware/middleware";
 
 export const spaceRouter = Router();

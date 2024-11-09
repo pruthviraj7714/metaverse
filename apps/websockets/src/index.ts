@@ -24,3 +24,5 @@ wss.on("connection", (ws: WebSocket) => {
     })
   );
 });
+
+console.log("websocket server is running...")

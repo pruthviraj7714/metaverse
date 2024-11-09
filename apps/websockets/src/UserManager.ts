@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "./config";
-import client from "@repo/db/src/db";
+import client from "@repo/db/client";
 import { RoomManager } from "./RoomManager";
 
 export class User {

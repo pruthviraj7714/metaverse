@@ -5,7 +5,7 @@ import {
   CreateElementSchema,
   CreateMapSchema,
 } from "../types";
-import client from "@repo/db/src/db";
+import client from "@repo/db/client";
 
 export const adminRouter = Router();
 

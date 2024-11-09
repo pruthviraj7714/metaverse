@@ -1,5 +1,5 @@
 import { Router } from "express";
-import client from "@repo/db/src/db";
+import client from "@repo/db/client";
 export const availableRouter = Router();
 
 availableRouter.get("/spaces", async (req: any, res: any) => {

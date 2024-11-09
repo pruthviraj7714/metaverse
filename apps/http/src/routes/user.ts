@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
-import client from "@repo/db/src/db";
+import client from "@repo/db/client";
 import { SignInSchema, SignUpSchema } from "../types";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/config";
