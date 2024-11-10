@@ -3,9 +3,10 @@ import { adminRouter } from "./routes/admin";
 import { spaceRouter } from "./routes/space";
 import { userRouter } from "./routes/user";
 import { availableRouter } from "./routes/available";
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/available',availableRouter);

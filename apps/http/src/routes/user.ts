@@ -5,6 +5,9 @@ import { SignInSchema, SignUpSchema } from "../types";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/config";
 import authMiddleware from "../middleware/middleware";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const userRouter = Router();
 
@@ -30,7 +33,7 @@ userRouter.post("/signup", async (req: any, res: any) => {
         message: "Username already exists",
       });
     }
-   
+
     const isAdmin = username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD
       
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -80,16 +83,16 @@ userRouter.post("/signin", async (req: any, res: any) => {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
+
     if (!isPasswordValid) {
       return res.status(401).json({
         message: "Wrong Password",
       });
     }
-
+    
     const token = jwt.sign(
       { id: user.id, role : user.role },
       JWT_SECRET as string,
-      { expiresIn: "1h" }
     );
 
     return res.status(200).json({
