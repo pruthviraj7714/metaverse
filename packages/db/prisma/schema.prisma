@@ -21,6 +21,7 @@ model User {
 model Avatar {
   id       String @id @default(uuid())
   userId   Int?
+  name      String?
   user     User?   @relation(fields: [userId], references: [id])
   imageUrl String
 
@@ -56,7 +57,7 @@ model Element {
   name       String
   imageUrl   String
   dimensions Json
-  position   Json
+  position   Json?
 }
 
 enum Role {
