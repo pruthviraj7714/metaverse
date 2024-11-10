@@ -36,5 +36,6 @@ export const CreateMapSchema = z.object({
 });
 
 export const CreateAvatarSchema = z.object({
+    name: z.string(),
     imageUrl : z.string(),
 });
