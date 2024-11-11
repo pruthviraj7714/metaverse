@@ -18,20 +18,23 @@ export class User {
 
   private setupMessageHandler(): void {
     this.ws.on("message", async (data) => {
-      const parsedData = JSON.parse(data.toString());
-      console.log(`Received message from user: ${JSON.stringify(parsedData)}`);
-
-      switch (parsedData.type) {
-        case "join":
-          console.log("User Joined:", parsedData);
-          await this.handleJoin(parsedData);
-          break;
-        case "move":
-          console.log("User moved to position", parsedData.data);
-          await this.handleMove(parsedData);
-          break;
-        default:
-          console.log("Unknown message type:", parsedData.type);
+      try {
+        const parsedData = JSON.parse(data.toString());
+        console.log(`Received message from user: ${JSON.stringify(parsedData)}`);
+  
+        switch (parsedData.type) {
+          case "join":
+            await this.handleJoin(parsedData);
+            break;
+          case "move":
+            await this.handleMove(parsedData);
+            break;
+          default:
+            this.send({ type: "error", message: "Unknown message type" });
+        }
+      } catch (error) {
+        console.error("Invalid message format:", error);
+        this.send({ type: "error", message: "Invalid message format" });
       }
     });
   }
@@ -41,12 +44,12 @@ export class User {
 
     try {
       const decoded = Jwt.verify(token, JWT_SECRET as string) as JwtPayload;
-      if (!decoded.userId) {
+      if (!decoded.id) {
         console.error("Invalid token");
         this.ws.close();
         return;
       }
-      this.userId = decoded.userId;
+      this.userId = decoded.id;
 
       const space = await client.space.findFirst({
         where: { id: spaceId },

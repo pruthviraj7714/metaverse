@@ -39,3 +39,8 @@ export const CreateAvatarSchema = z.object({
     name: z.string(),
     imageUrl : z.string(),
 });
+
+export const createSpaceSchema = z.object({
+    mapId : z.string(),
+    name : z.string()
+})

@@ -12,9 +12,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@repo/db" : "*",
+    "@repo/db": "*",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/ws": "^8.5.13",
+    "dotenv": "^16.4.5",
     "ws": "^8.18.0"
   }
 }
