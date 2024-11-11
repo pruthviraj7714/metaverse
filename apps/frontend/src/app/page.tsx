@@ -1,6 +1,18 @@
+"use client"
+
 import LandingAppbar from "@/components/LandingAppbar";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Landing() {
+  const router = useRouter();
+  useEffect(() => {
+    if(localStorage.getItem("token")) {
+      router.push('/home');
+    }
+
+  }, [])
+
   return (
     <div className="flex flex-col">
       <LandingAppbar />

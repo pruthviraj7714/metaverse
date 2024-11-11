@@ -19,12 +19,9 @@ interface FurnitureItem {
 
 interface FurnitureCardProps {
   item: FurnitureItem
-  onEdit?: (id: string) => void
-  onDelete?: (id: string) => void
-  onMove?: (id: string) => void
 }
 
-export default function ElementCard({ item, onEdit, onDelete, onMove }: FurnitureCardProps) {
+export default function ElementCard({ item }: FurnitureCardProps) {
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
       <AspectRatio ratio={4/3}>
@@ -45,37 +42,7 @@ export default function ElementCard({ item, onEdit, onDelete, onMove }: Furnitur
           Position: ({item.position.x}, {item.position.y})
         </p>
       </CardContent>
-      <CardFooter className="p-2 bg-muted/50">
-        <div className="flex justify-between w-full">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onEdit?.(item.id)}
-            className="hover:text-primary"
-          >
-            <Pencil className="h-4 w-4" />
-            <span className="sr-only">Edit</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onMove?.(item.id)}
-            className="hover:text-primary"
-          >
-            <Move className="h-4 w-4" />
-            <span className="sr-only">Move</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onDelete?.(item.id)}
-            className="hover:text-destructive"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
-          </Button>
-        </div>
-      </CardFooter>
+
     </Card>
   )
 }

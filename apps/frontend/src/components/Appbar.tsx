@@ -58,6 +58,11 @@ export default function Appbar() {
             </Button>
           </nav>
         )}
+        <Button onClick={() => {
+          router.push('/create-space')
+        }}>
+          Create Space
+        </Button>
       </div>
 
       <DropdownMenu>
