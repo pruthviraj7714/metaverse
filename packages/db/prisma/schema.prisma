@@ -15,13 +15,12 @@ model User {
   spaces    Space[]
   avatar    Avatar?
   createdAt DateTime @default(now())
-
 }
 
 model Avatar {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   userId   Int?
-  name      String?
+  name     String?
   user     User?   @relation(fields: [userId], references: [id])
   imageUrl String
 
@@ -32,7 +31,7 @@ model Space {
   id        String   @id @default(uuid())
   creatorId Int
   creator   User     @relation(fields: [creatorId], references: [id])
-  thumbnail String
+  name      String
   mapId     String
   map       Map      @relation(fields: [mapId], references: [id])
   createdAt DateTime @default(now())
