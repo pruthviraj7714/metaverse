@@ -42,7 +42,6 @@ export default function SpacePage({
   const router = useRouter()
 
   useEffect(() => {
-    // Unwrap the params Promise
     async function unwrapParams() {
       const resolvedParams = await params;
       setSpaceId(resolvedParams.spaceId);
@@ -80,55 +79,58 @@ export default function SpacePage({
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
-    if (!token) return
-
-    const ws = new WebSocket(`ws://localhost:8080/`)
-    wsRef.current = ws
-
+    if (!token) return;
+  
+    const ws = new WebSocket(`ws://localhost:8080`);
+    wsRef.current = ws;
+  
     ws.onopen = () => {
-      console.log('WebSocket connection established')
+      console.log('WebSocket connection established');
       ws.send(JSON.stringify({
         type: 'join',
         payload: { spaceId, token }
-      }))
-    }
-
+      }));
+    };
+  
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      console.log('Received message:', data)
-
+      const data = JSON.parse(event.data);
+      console.log('Received message:', data);
+  
       switch (data.type) {
         case 'user-joined':
           if (data.payload.spawn) {
-            setCurrentUser({ id: 'current', ...data.payload.spawn })
-            setUsers(data.payload.users)
+            setCurrentUser({ id: 'current', ...data.payload.spawn });
+            setUsers(data.payload.users);
           } else {
-            setUsers(prevUsers => [...prevUsers, { id: data.payload.userId, x: data.payload.x, y: data.payload.y }])
+            setUsers(prevUsers => [...prevUsers, { id: data.payload.userId, x: data.payload.x, y: data.payload.y }]);
           }
-          break
-        case 'movement':
-          setUsers(prevUsers => 
-            prevUsers.map(user => 
-              user.id === data.payload.userId ? { ...user, ...data.payload } : user
-            )
-          )
-          break
+          break;
+          case 'movement':
+            setUsers(prevUsers =>
+              prevUsers.map(user =>
+                user.id === data.payload.userId ? { ...user, x: data.payload.x, y: data.payload.y } : user
+              )
+            );
+            if (data.payload.userId === currentUser?.id) {
+              setCurrentUser(prev => prev ? { ...prev, x: data.payload.x, y: data.payload.y } : null);
+            }
+            break;
         case 'user-left':
-          setUsers(prevUsers => prevUsers.filter(user => user.id !== data.payload.userId))
-          break
+          setUsers(prevUsers => prevUsers.filter(user => user.id !== data.payload.userId));
+          break;
       }
-    }
-
+    };
+  
     ws.onclose = () => {
-      console.log('WebSocket connection closed')
-    }
-
+      console.log('WebSocket connection closed');
+    };
+  
     return () => {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.close()
+        ws.close();
       }
-    }
-  }, [spaceInfo, spaceId])
+    };
+  }, [spaceInfo, spaceId]);
 
   const handleMove = (direction: 'up' | 'down' | 'left' | 'right') => {
     if (!currentUser || !wsRef.current) return
@@ -138,16 +140,16 @@ export default function SpacePage({
 
     switch (direction) {
       case 'up':
-        newY = Math.max(0, currentUser.y - 1)
+        newY = Math.max(0, currentUser.y - 10)
         break
       case 'down':
-        newY = Math.min((spaceInfo?.map.dimensions.height || 0) - 1, currentUser.y + 1)
+        newY = Math.min((spaceInfo?.map.dimensions.height || 0) - 10, currentUser.y + 10)
         break
       case 'left':
-        newX = Math.max(0, currentUser.x - 1)
+        newX = Math.max(0, currentUser.x - 10)
         break
       case 'right':
-        newX = Math.min((spaceInfo?.map.dimensions.width || 0) - 1, currentUser.x + 1)
+        newX = Math.min((spaceInfo?.map.dimensions.width || 0) - 10, currentUser.x + 10)
         break
     }
 

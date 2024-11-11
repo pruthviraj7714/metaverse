@@ -65,13 +65,14 @@ export class User {
       this.spaceId = spaceId;
       RoomManager.getInstance().addUser(this.spaceId!, this);
 
-      const dimensions = space.map?.dimensions ?? { width: 0, height: 0 };
       this.x = Math.floor(
         Math.random() * ((space?.map?.dimensions as any)?.width ?? 0)
       );
       this.y = Math.floor(
         Math.random() * ((space?.map?.dimensions as any)?.height ?? 0)
       );
+      console.log(`this.x is ${this.x}`)
+      console.log(`this.y is ${this.y}`)
       this.send({
         type: "user-joined",
         payload: {
@@ -103,17 +104,17 @@ export class User {
 
   private async handleMove(parsedData: any): Promise<void> {
     const { x: targetX, y: targetY } = parsedData.payload;
-
+  
     const xDistance = Math.abs(this.x - targetX);
     const yDistance = Math.abs(this.y - targetY);
-
-    if ((xDistance === 1 && yDistance === 0) || (xDistance === 0 && yDistance === 1)) {
+  
+    if ((xDistance === 10 && yDistance === 0) || (xDistance === 0 && yDistance === 10)) {
       this.x = targetX;
       this.y = targetY;
       RoomManager.getInstance().broadcast(
         {
           type: "movement",
-          payload: { x: this.x, y: this.y },
+          payload: { userId: this.userId, x: this.x, y: this.y },
         },
         this,
         this.spaceId!
