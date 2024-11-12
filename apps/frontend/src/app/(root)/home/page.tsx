@@ -98,7 +98,7 @@ export default function HomePage() {
           <Card className="max-w-md mx-auto text-center p-6">
             <CardContent>
               <p className="text-xl mb-4">No Spaces found!</p>
-              <Button className="w-full">
+              <Button onClick={() => router.push('/create-space')} className="w-full">
                 <PlusCircle className="mr-2 h-4 w-4" /> Create New Space
               </Button>
             </CardContent>
